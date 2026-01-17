@@ -11,17 +11,6 @@
       "use": "@vercel/node"
     }
   ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "script-src 'self' blob: 'unsafe-inline';"
-        }
-      ]
-    }
-  ],
   "routes": [
     {
       "src": "/api/(.*)",
@@ -29,6 +18,9 @@
     },
     {
       "src": "/(.*)",
+      "headers": {
+        "Content-Security-Policy": "script-src 'self' blob: 'unsafe-inline';"
+      },
       "dest": "/index.html"
     }
   ]
