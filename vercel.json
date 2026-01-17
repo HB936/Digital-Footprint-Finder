@@ -1,29 +1,26 @@
 {
   "version": 2,
-  "installCommand": "npm run install-all",
-  "buildCommand": "npm run build",
   "builds": [
     {
-      "src": "frontend/dist",
-      "use": "@vercel/static"
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build"
     },
     {
-      "src": "api/index.js",
+      "src": "backend/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "api/index.js"
+      "dest": "backend/index.js"
     },
     {
-      "src": "/.*",
-      "dest": "/index.html",
+      "src": "/(.*)",
       "headers": {
-        "cache-control": "public, max-age=0, s-maxage=0, must-revalidate",
-        "Content-Security-Policy": "default-src 'self' blob: https:; script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https: wss:; frame-ancestors 'none';"
-      }
+        "Content-Security-Policy": "script-src 'self' blob: 'unsafe-inline';"
+      },
+      "dest": "/index.html"
     }
   ]
 }
