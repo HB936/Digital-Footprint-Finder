@@ -1,12 +1,10 @@
 {
   "version": 2,
+  "installCommand": "cd frontend && npm install && npm run build && cd ../api && npm install",
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "src": "frontend/dist",
+      "use": "@vercel/static"
     },
     {
       "src": "api/index.js",
@@ -19,7 +17,7 @@
       "dest": "api/index.js"
     },
     {
-      "src": "/.*",
+      "src": "/(.*)",
       "dest": "/index.html",
       "headers": {
         "cache-control": "public, max-age=0, s-maxage=0, must-revalidate",
