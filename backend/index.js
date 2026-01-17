@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const axios = require("axios");
 const multer = require("multer");
 const path = require("path");
-const { exec } = require("child_process");
+const { spawn, exec } = require("child_process");
 const puppeteer = require("puppeteer");
 const fs = require("fs").promises;
 const os = require("os");
@@ -59,19 +59,35 @@ app.post("/api/email", async (req, res) => {
 app.post("/api/username", async (req, res) => {
   try {
     const { username } = req.body;
-    if (!username) return res.status(400).json({ error: "Username is required" });
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
+    }
 
-    const response = await axios.post(
-      `${process.env.SHERLOCK_SERVICE_URL}/search`,
-      { username },
-      { responseType: "stream" }
-    );
+    const sherlockPath = path.resolve(__dirname, '..', 'sherlock', 'sherlock.py');
+    const sherlock = spawn("python3", [
+      sherlockPath,
+      "--timeout", "10",
+      "--print-found",
+      username
+    ]);
 
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
 
-    response.data.pipe(res);
+    sherlock.stdout.on('data', (data) => {
+      res.write(`data: ${data.toString()}\n\n`);
+    });
+
+    sherlock.stderr.on('data', (data) => {
+      console.error(`Sherlock stderr: ${data}`);
+    });
+
+    sherlock.on('close', (code) => {
+      console.log(`Sherlock process exited with code ${code}`);
+      res.end();
+    });
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -84,8 +100,8 @@ app.post("/api/phone", async (req, res) => {
     const { phone } = req.body;
     if (!phone) return res.status(400).json({ error: "Phone number is required" });
 
-    const phoneinfogaPath = path.resolve(__dirname, "..", "phoneinfoga", "phoneinfoga.exe");
-    const command = `"${phoneinfogaPath}" scan -n ${phone}`;
+    const phoneinfogaPath = path.resolve(__dirname, "..", "phoneinfoga", "phoneinfoga_linux");
+    const command = `${phoneinfogaPath} scan -n ${phone}`;
 
     exec(command, (error, stdout, stderr) => {
       console.log("stdout:", stdout);
@@ -147,7 +163,6 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
 
     browser = await puppeteer.launch({
       headless: true,
-      executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",

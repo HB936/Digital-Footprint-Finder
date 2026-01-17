@@ -1,3 +1,6 @@
 [submodule "sherlock"]
 	path = sherlock
 	url = https://github.com/sherlock-project/sherlock.git
+[submodule "phoneinfoga"]
+	path = phoneinfoga
+	url = https://github.com/sundowndev/phoneinfoga.git
