@@ -1,12 +1,13 @@
 {
   "version": 2,
   "installCommand": "git submodule update --init --recursive && pip install ./sherlock && cd phoneinfoga && go build -o phoneinfoga_linux . && cd ..",
+  "buildCommand": "cd frontend && npm run build",
   "builds": [
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "frontend/dist"
       }
     },
     {
@@ -22,6 +23,7 @@
     {
       "src": "/(.*)",
       "headers": {
+        "cache-control": "public, max-age=3600",
         "Content-Security-Policy": "default-src 'self'; script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'none';"
       },
       "dest": "/index.html"
