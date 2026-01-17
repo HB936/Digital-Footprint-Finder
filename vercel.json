@@ -14,7 +14,6 @@
     {
       "src": "/api/(.*)",
       "dest": "backend/index.js"
-    },
-    
+    }
   ]
 }
