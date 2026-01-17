@@ -1,6 +1,7 @@
 .git
-.env.local
-.env.*.local
-node_modules
 .venv
-phoneinfoga/bin
+node_modules/
+phoneinfoga/bin/
+phoneinfoga/build/
+.env.local
+*.log
