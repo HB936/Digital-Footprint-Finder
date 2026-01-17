@@ -21,6 +21,13 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.use(cors());
 app.use(express.json());
 
+// Serve frontend static files
+const frontendDistPath = path.join(__dirname, '../frontend/dist');
+const fs_sync = require('fs');
+if (fs_sync.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+}
+
 /* -------------------- EMAIL CHECK -------------------- */
 app.post("/api/email", async (req, res) => {
   try {
@@ -309,5 +316,23 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
   }
 });
 
+// Catch-all route for SPA - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  const indexPath = path.join(__dirname, '../frontend/dist/index.html');
+  if (fs_sync.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).json({ error: 'Frontend not found' });
+  }
+});
+
 // Export for Vercel
 module.exports = app;
+
+// Start server locally (not needed for Vercel, which calls the handler)
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
