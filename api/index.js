@@ -5,12 +5,6 @@ const dotenv = require("dotenv");
 const axios = require("axios");
 const multer = require("multer");
 const path = require("path");
-const { spawn, exec } = require("child_process");
-const puppeteer = require("puppeteer");
-const fs = require("fs").promises;
-const os = require("os");
-const { translate } = require("google-translate-api-x");
-
 // Load environment variables
 dotenv.config();
 
@@ -70,45 +64,11 @@ app.post("/api/username", async (req, res) => {
       return res.status(400).json({ error: "Username is required" });
     }
 
-    const sherlockPath = path.resolve(__dirname, '..', 'sherlock', 'sherlock_project', 'sherlock.py');
-    const pythonExecutable = process.env.VERCEL ? 'python3' : path.resolve(__dirname, '..', '.venv', 'Scripts', 'python.exe');
-    const sherlock = spawn(pythonExecutable, [
-      sherlockPath,
-      "--timeout", "10",
-      "--print-found",
-      username
-    ]);
-
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
-
-    sherlock.stdout.on('data', (data) => {
-      const lines = data.toString().split('\n');
-      for (const line of lines) {
-        if (line.startsWith('[+]')) {
-          const parts = line.split(': ');
-          if (parts.length > 1) {
-            const platform = parts[0].replace('[+] ', '').trim();
-            const url = parts.slice(1).join(': ').trim();
-            const result = {
-              platform,
-              exists: true,
-              url,
-            };
-            res.write(`data: ${JSON.stringify(result)}\n\n`);
-          }
-        }
-      }
-    });
-
-    sherlock.stderr.on('data', (data) => {
-      console.error(`Sherlock stderr: ${data}`);
-    });
-
-    sherlock.on('close', (code) => {
-      console.log(`Sherlock process exited with code ${code}`);
-      res.end();
+    // Python Sherlock integration disabled on Railway - use email/phone/image search instead
+    return res.status(503).json({
+      error: "Username search temporarily unavailable",
+      message: "This feature requires Python environment setup. Try email, phone, or image reverse search instead.",
+      availableFeatures: ["email", "phone", "image"]
     });
 
   } catch (error) {
