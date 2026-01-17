@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 import subprocess
@@ -29,7 +30,8 @@ def search_username():
 
         try:
 
-            sherlock_path = os.path.join(os.getcwd(), "sherlock", "sherlock_project", "sherlock.py")
+            sherlock_path = os.path.join(os.path.dirname(__file__), "..", "sherlock", "sherlock_project", "sherlock.py")
+            print(f"DEBUG: sherlock_path: {sherlock_path}", file=sys.stderr)
 
             process = subprocess.Popen(
 

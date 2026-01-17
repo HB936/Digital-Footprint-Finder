@@ -63,8 +63,9 @@ app.post("/api/username", async (req, res) => {
       return res.status(400).json({ error: "Username is required" });
     }
 
-    const sherlockPath = path.resolve(__dirname, '..', 'sherlock', 'sherlock.py');
-    const sherlock = spawn("python3", [
+    const sherlockPath = path.resolve(__dirname, '..', 'sherlock', 'sherlock_project', 'sherlock.py');
+    const pythonExecutable = process.env.VERCEL ? 'python3' : path.resolve(__dirname, '..', '.venv', 'Scripts', 'python.exe');
+    const sherlock = spawn(pythonExecutable, [
       sherlockPath,
       "--timeout", "10",
       "--print-found",
@@ -76,7 +77,22 @@ app.post("/api/username", async (req, res) => {
     res.setHeader("Connection", "keep-alive");
 
     sherlock.stdout.on('data', (data) => {
-      res.write(`data: ${data.toString()}\n\n`);
+      const lines = data.toString().split('\n');
+      for (const line of lines) {
+        if (line.startsWith('[+]')) {
+          const parts = line.split(': ');
+          if (parts.length > 1) {
+            const platform = parts[0].replace('[+] ', '').trim();
+            const url = parts.slice(1).join(': ').trim();
+            const result = {
+              platform,
+              exists: true,
+              url,
+            };
+            res.write(`data: ${JSON.stringify(result)}\n\n`);
+          }
+        }
+      }
     });
 
     sherlock.stderr.on('data', (data) => {
@@ -95,13 +111,20 @@ app.post("/api/username", async (req, res) => {
 
 /* -------------------- PHONE CHECK -------------------- */
 app.post("/api/phone", async (req, res) => {
+  if (!process.env.VERCEL) {
+    return res.status(501).json({
+        error: "Phone number scanning is not supported in the local environment.",
+        details: "This feature requires a specific binary that is built for the deployment environment. It will be available in the deployed application."
+    });
+  }
+
   console.log("Request received for /api/phone");
   try {
     const { phone } = req.body;
     if (!phone) return res.status(400).json({ error: "Phone number is required" });
 
     const phoneinfogaPath = path.resolve(__dirname, "..", "phoneinfoga", "phoneinfoga_linux");
-    const command = `${phoneinfogaPath} scan -n ${phone}`;
+    const command = `"${phoneinfogaPath}" scan -n ${phone}`;
 
     exec(command, (error, stdout, stderr) => {
       console.log("stdout:", stdout);
@@ -166,11 +189,9 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
-        "--disable-gpu",
         "--disable-dev-shm-usage",
-        `--user-data-dir=${path.join(os.tmpdir(), 'puppeteer-profile')}`
       ],
-      ignoreDefaultArgs: ["--enable-automation"],
+      dumpio: true, // Pipe browser process stdout/stderr to process
     });
 
     const page = await browser.newPage();

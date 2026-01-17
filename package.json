@@ -3,6 +3,6 @@
     "concurrently": "^9.2.1"
   },
   "scripts": {
-    "start": "concurrently \"python python/sherlock.py\" \"cd frontend && npm run dev\" \"cd backend && node --watch index\""
+    "start": "concurrently \".\\\\.venv\\\\Scripts\\\\python.exe python/sherlock.py\" \"cd frontend && npm run dev\" \"cd backend && node --watch index\""
   }
 }
