@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/image
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="image"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./test1.jpeg
+--MyBoundary--
