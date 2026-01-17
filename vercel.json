@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "installCommand": "cd frontend && npm install",
+  "installCommand": "cd frontend && npm install && cd ../backend && npm install",
   "buildCommand": "cd frontend && npm run build",
   "builds": [
     {
@@ -18,7 +18,7 @@
       "dest": "backend/index.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/.*",
       "dest": "/index.html",
       "headers": {
         "cache-control": "public, max-age=0, s-maxage=0",
