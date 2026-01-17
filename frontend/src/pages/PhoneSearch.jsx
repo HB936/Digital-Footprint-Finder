@@ -22,7 +22,7 @@ function PhoneSearch() {
     setLoading(true);
     try {
       console.log('Sending POST request to /api/phone');
-      const response = await fetch('http://localhost:3000/api/phone', {
+      const response = await fetch('/api/phone', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

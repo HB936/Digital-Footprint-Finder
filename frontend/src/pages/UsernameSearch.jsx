@@ -18,7 +18,7 @@ function UsernameSearch() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3000/api/username', {
+      const response = await fetch('/api/username', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

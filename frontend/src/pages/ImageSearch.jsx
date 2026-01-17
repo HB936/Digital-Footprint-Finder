@@ -34,7 +34,7 @@ function ImageSearch() {
       const formData = new FormData();
       formData.append('image', image);
 
-      const response = await fetch('http://localhost:3000/api/image', {
+      const response = await fetch('/api/image', {
         method: 'POST',
         body: formData,
       });
