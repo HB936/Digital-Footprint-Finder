@@ -1,24 +1,12 @@
 {
   "version": 2,
-  "installCommand": "git submodule update --init --recursive && pip install ./sherlock && cd phoneinfoga && go build -o phoneinfoga_linux . && cd ..",
   "builds": [
     {
       "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "backend/index.js",
-      "use": "@vercel/node"
+      "use": "@vercel/static-build"
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend/index.js"
-    },
     {
       "src": "/(.*)",
       "dest": "/index.html"
