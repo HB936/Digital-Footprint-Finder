@@ -2,6 +2,9 @@
   "version": 2,
   "installCommand": "npm install --prefix frontend && npm install --prefix backend",
   "buildCommand": "npm run build --prefix frontend",
+  "env": {
+    "NEXT_PUBLIC_SKIP_ENV_VALIDATION": "true"
+  },
   "builds": [
     {
       "src": "frontend/dist",
@@ -18,10 +21,11 @@
       "dest": "backend/index.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/.*",
+      "methods": ["GET", "HEAD", "OPTIONS"],
       "headers": {
-        "cache-control": "public, max-age=3600",
-        "Content-Security-Policy": "default-src 'self'; script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'none';"
+        "cache-control": "public, max-age=0, must-revalidate",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self' blob: 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self';"
       },
       "dest": "/index.html"
     }
