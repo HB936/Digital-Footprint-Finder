@@ -15,12 +15,6 @@
       "src": "/api/(.*)",
       "dest": "backend/index.js"
     },
-    {
-      "src": "/(.*)",
-      "headers": {
-        "Content-Security-Policy": "script-src 'self' blob: 'unsafe-inline';"
-      },
-      "dest": "/index.html"
-    }
+    
   ]
 }
