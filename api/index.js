@@ -5,6 +5,11 @@ const dotenv = require("dotenv");
 const axios = require("axios");
 const multer = require("multer");
 const path = require("path");
+const puppeteer = require("puppeteer");
+const fs = require("fs").promises;
+const os = require("os");
+const { translate } = require("google-translate-api-x");
+
 // Load environment variables
 dotenv.config();
 
