@@ -1,14 +1,11 @@
 {
   "version": 2,
-  "installCommand": "git submodule update --init --recursive && pip install ./sherlock && cd phoneinfoga && go build -o phoneinfoga_linux . && cd ..",
-  "buildCommand": "cd frontend && npm run build",
+  "installCommand": "npm install --prefix frontend && npm install --prefix backend",
+  "buildCommand": "npm run build --prefix frontend",
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "frontend/dist"
-      }
+      "src": "frontend/dist",
+      "use": "@vercel/static"
     },
     {
       "src": "backend/index.js",
