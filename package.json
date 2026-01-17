@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"cd frontend && npm run dev\" \"cd backend && node --watch index\" \"python python/sherlock.py\"",
-    "build": "npm run build --prefix frontend",
+    "build": "npm run build --prefix frontend && npm install --prefix api",
+    "start": "npm run build && concurrently \"cd frontend && npm run dev\" \"cd api && node index.js\" \"python python/sherlock.py\"",
     "install-all": "npm install && npm install --prefix frontend && npm install --prefix backend && npm install --prefix api"
   },
   "dependencies": {
