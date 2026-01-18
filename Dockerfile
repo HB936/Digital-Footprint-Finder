@@ -22,6 +22,11 @@ ENV PATH="/root/go/bin:${PATH}"
 # Clone and build phoneinfoga from GitHub
 RUN git clone https://github.com/sundowndev/phoneinfoga.git /app/phoneinfoga-src && \
     cd /app/phoneinfoga-src && \
+    npm install -g yarn && \
+    cd web/client && \
+    yarn install && \
+    yarn build && \
+    cd ../.. && \
     go mod download && \
     go install github.com/swaggo/swag/cmd/swag@latest && \
     make build && \
