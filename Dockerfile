@@ -12,10 +12,7 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
-# Install Sherlock Python dependencies
-RUN cd sherlock && pip3 install --no-cache-dir -e . 2>/dev/null || pip3 install --no-cache-dir -r requirements.txt 2>/dev/null || true
-
-# Install Node dependencies
+# Node dependencies
 RUN npm install --prefix api
 RUN npm install --prefix frontend
 
