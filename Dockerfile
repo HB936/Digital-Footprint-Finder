@@ -22,7 +22,7 @@ ENV PATH="/root/go/bin:${PATH}"
 # Clone and build phoneinfoga from GitHub
 RUN git clone https://github.com/sundowndev/phoneinfoga.git /app/phoneinfoga-src
 WORKDIR /app/phoneinfoga-src/web/client
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build
 WORKDIR /app/phoneinfoga-src
 RUN go mod download && \
