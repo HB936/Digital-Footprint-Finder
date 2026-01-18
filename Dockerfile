@@ -22,7 +22,9 @@ RUN go mod download && \
     make build
 
 # Stage 2: Final image
-FROM node:22-slim# Install Python and Puppeteer dependencies
+FROM node:22-slim
+
+# Install Python and Puppeteer dependencies
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
