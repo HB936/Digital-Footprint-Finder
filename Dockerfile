@@ -17,13 +17,13 @@ COPY . .
 # Install Sherlock from PyPI
 RUN pip3 install --no-cache-dir --break-system-packages sherlock-project
 
-# Clone Sherlock repo to get access to the script
-RUN git clone https://github.com/sherlock-project/sherlock.git /app/sherlock-repo
+
 
 # Clone and build phoneinfoga from GitHub
 RUN git clone https://github.com/sundowndev/phoneinfoga.git /app/phoneinfoga-src && \
     cd /app/phoneinfoga-src && \
     go mod download && \
+    go install github.com/swaggo/swag/cmd/swag@latest && \
     make build && \
     mkdir -p /app/phoneinfoga/bin && \
     cp ./bin/phoneinfoga /app/phoneinfoga/bin/phoneinfoga
