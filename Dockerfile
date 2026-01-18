@@ -13,7 +13,7 @@ WORKDIR /app
 COPY . .
 
 # Install Sherlock Python dependencies
-RUN pip3 install --no-cache-dir -r sherlock/requirements.txt 2>/dev/null || true
+RUN cd sherlock && pip3 install --no-cache-dir -e . 2>/dev/null || pip3 install --no-cache-dir -r requirements.txt 2>/dev/null || true
 
 # Install Node dependencies
 RUN npm install --prefix api
