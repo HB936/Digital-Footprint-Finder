@@ -198,7 +198,7 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
 
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36');
-    page.setDefaultTimeout(60000);
+    page.setDefaultTimeout(120000); // 120 seconds
 
     // ✅ Use yandex.com (not /images/search)
     await page.goto("https://yandex.com", { waitUntil: "domcontentloaded" });
@@ -312,22 +312,27 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
     };
 
     // Use translate package (CommonJS compatible)
-    if (results.title) {
-      if (results.title.toLowerCase().includes('yandex uses cookies')) {
-        results.title = 'Image Search Results';
+    try {
+      if (results.title) {
+        if (results.title.toLowerCase().includes('yandex uses cookies')) {
+          results.title = 'Image Search Results';
+        }
+        const titleRes = await translate(results.title, { to: "en", client: "gtx" });
+        results.title = titleRes.text;
+        
+        // If title is the default Yandex title, replace it
+        if (results.title === "Yandex Images: search for images") {
+          results.title = "Similar Images";
+        }
       }
-      const titleRes = await translate(results.title, { to: "en", client: "gtx" });
-      results.title = titleRes.text;
-      
-      // If title is the default Yandex title, replace it
-      if (results.title === "Yandex Images: search for images") {
-        results.title = "Similar Images";
-      }
-    }
 
-    if (results.description) {
-      const descRes = await translate(results.description, { to: "en", client: "gtx" });
-      results.description = descRes.text;
+      if (results.description) {
+        const descRes = await translate(results.description, { to: "en", client: "gtx" });
+        results.description = descRes.text;
+      }
+    } catch (translateError) {
+      console.error("Translation Error:", translateError.message);
+      // Non-fatal: continue with original title/description
     }
 
     await browser.close();
@@ -341,6 +346,7 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
     res.status(500).json({
       error: "Reverse image search failed",
       details: err.message,
+      stack: err.stack, // Add stack for more detailed debugging
     });
   }
 });
