@@ -74,7 +74,7 @@ app.post("/api/username", async (req, res) => {
     const pythonExecutable = 'python3';
     const sherlock = spawn(pythonExecutable, [
       sherlockPath,
-      "--timeout", "10",
+      "--timeout", "30",
       "--print-found",
       username
     ]);
@@ -84,7 +84,9 @@ app.post("/api/username", async (req, res) => {
     res.setHeader("Connection", "keep-alive");
 
     sherlock.stdout.on('data', (data) => {
-      const lines = data.toString().split('\n');
+      const output = data.toString();
+      console.log(`Sherlock output: ${output}`);
+      const lines = output.split('\n');
       for (const line of lines) {
         if (line.startsWith('[+]')) {
           const parts = line.split(': ');
@@ -109,6 +111,11 @@ app.post("/api/username", async (req, res) => {
     sherlock.on('close', (code) => {
       console.log(`Sherlock process exited with code ${code}`);
       res.end();
+    });
+
+    sherlock.on('error', (error) => {
+      console.error(`Sherlock spawn error: ${error}`);
+      res.status(500).json({ error: `Failed to spawn Sherlock: ${error.message}` });
     });
 
   } catch (error) {

@@ -4,12 +4,16 @@ FROM node:22
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Copy project files
 COPY . .
+
+# Install Sherlock Python dependencies
+RUN pip3 install --no-cache-dir -r sherlock/requirements.txt 2>/dev/null || true
 
 # Install Node dependencies
 RUN npm install --prefix api
