@@ -30,34 +30,28 @@ function ImageSearch() {
     }
 
     setLoading(true);
-          try {
-            const formData = new FormData();
-            formData.append('image', image);
-    
-            const response = await fetch('/api/image', {
-              method: 'POST',
-              body: formData,
-            });
-    
-                    let data;
-                    try {
-                      data = await response.json();
-                      console.log("Received data from backend:", data);
-                    } catch (jsonError) {
-                      console.error("JSON parsing error:", jsonError);
-                      const textResponse = await response.text();
-                      console.error("Raw response text:", textResponse);
-                      throw new Error("Could not parse server response. Details in console.");
-                    }    
-            if (!response.ok) {
-              throw new Error(data.error || 'Search failed');
-            }
-    
-            if (!data.success || !data.data) throw new Error('Unexpected response format');
-    
-            setResults(data.data);
-            toast.success('Image search completed successfully!');
-          } catch (error) {      console.error('Frontend Error:', error);
+                      try {
+                        const formData = new FormData();
+                        formData.append('image', image);
+                
+                        const response = await fetch('/api/image', {
+                          method: 'POST',
+                          body: formData,
+                        });
+                
+                        if (!response.ok) {
+                          const errorData = await response.json().catch(() => ({ error: 'Search failed with status ' + response.status }));
+                          throw new Error(errorData.error || 'Search failed');
+                        }
+                
+                        const data = await response.json();
+                
+                        // Handle both wrapped (local) and unwrapped (Railway) responses
+                        const resultsData = data.success ? data.data : data;
+                
+                        setResults(resultsData);
+                        toast.success('Image search completed successfully!');
+                      } catch (error) {      console.error('Frontend Error:', error);
       toast.error(error.message || 'Failed to search image');
     } finally {
       setLoading(false);
@@ -190,13 +184,13 @@ function ImageSearch() {
           </div>
 
           {/* --- Similar Images --- */}
-          {Array.isArray(results.images) && results.images.length > 0 && (
+          {Array.isArray(results.similarImages) && results.similarImages.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold text-slate-800 dark:text-emerald-400 mb-3">
-                Similar Images ({results.images.length})
+                Similar Images ({results.similarImages.length})
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {results.images.map((img, i) => (
+                {results.similarImages.map((img, i) => (
                   <a
                     key={i}
                     href={img}
