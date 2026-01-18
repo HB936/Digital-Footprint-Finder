@@ -17,7 +17,7 @@ COPY . .
 # Install Sherlock from PyPI
 RUN pip3 install --no-cache-dir --break-system-packages sherlock-project
 
-
+ENV PATH="/root/go/bin:${PATH}"
 
 # Clone and build phoneinfoga from GitHub
 RUN git clone https://github.com/sundowndev/phoneinfoga.git /app/phoneinfoga-src && \
