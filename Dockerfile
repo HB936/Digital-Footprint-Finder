@@ -71,7 +71,7 @@ RUN npm install --prefix api
 RUN npm install --prefix frontend
 
 # Build user's frontend
-RUN npm run build --prefix frontend
+RUN if [ -d "frontend/dist" ]; then npm run build --prefix frontend; else echo "Frontend not found, skipping build."; fi
 
 # Expose port
 EXPOSE 8080
