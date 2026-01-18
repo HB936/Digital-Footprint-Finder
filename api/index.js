@@ -124,13 +124,6 @@ app.post("/api/username", async (req, res) => {
 
 /* -------------------- PHONE CHECK -------------------- */
 app.post("/api/phone", async (req, res) => {
-  if (!process.env.VERCEL) {
-    return res.status(501).json({
-        error: "Phone number scanning is not supported in the local environment.",
-        details: "This feature requires a specific binary that is built for the deployment environment. It will be available in the deployed application."
-    });
-  }
-
   console.log("Request received for /api/phone");
   try {
     const { phone } = req.body;

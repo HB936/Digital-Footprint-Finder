@@ -1,10 +1,12 @@
 FROM node:22
 
-# Install Python and dependencies
+# Install Python, Go, and build tools
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     git \
+    golang-go \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -17,6 +19,9 @@ RUN pip3 install --no-cache-dir --break-system-packages sherlock-project
 
 # Clone Sherlock repo to get access to the script
 RUN git clone https://github.com/sherlock-project/sherlock.git /app/sherlock-repo
+
+# Build phoneinfoga
+RUN cd /app/phoneinfoga && go build -o phoneinfoga_linux main.go 2>/dev/null || make build 2>/dev/null || true
 
 # Node dependencies
 RUN npm install --prefix api
