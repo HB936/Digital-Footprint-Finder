@@ -30,24 +30,34 @@ function ImageSearch() {
     }
 
     setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('image', image);
-
-      const response = await fetch('/api/image', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Search failed');
-
-      if (!data.success || !data.data) throw new Error('Unexpected response format');
-
-      setResults(data.data);
-      toast.success('Image search completed successfully!');
-    } catch (error) {
-      console.error('Frontend Error:', error);
+          try {
+            const formData = new FormData();
+            formData.append('image', image);
+    
+            const response = await fetch('/api/image', {
+              method: 'POST',
+              body: formData,
+            });
+    
+            let data;
+            try {
+              data = await response.json();
+            } catch (jsonError) {
+              console.error("JSON parsing error:", jsonError);
+              const textResponse = await response.text();
+              console.error("Raw response text:", textResponse);
+              throw new Error("Could not parse server response. Details in console.");
+            }
+    
+            if (!response.ok) {
+              throw new Error(data.error || 'Search failed');
+            }
+    
+            if (!data.success || !data.data) throw new Error('Unexpected response format');
+    
+            setResults(data.data);
+            toast.success('Image search completed successfully!');
+          } catch (error) {      console.error('Frontend Error:', error);
       toast.error(error.message || 'Failed to search image');
     } finally {
       setLoading(false);
