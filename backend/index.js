@@ -189,22 +189,15 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-infobars',
         '--disable-dev-shm-usage',
-        '--disable-extensions',
         '--disable-gpu',
-        '--no-zygote',
-        '--single-process',
-        '--disable-features=TranslateUI,BlinkGenPropertyTrees',
-        '--disable-push-messaging',
-        '--disable-background-networking',
-        '--disable-gcm',
-        '--disable-notifications',
+        '--window-size=1280,800',
       ],
       dumpio: true, // Pipe browser process stdout/stderr to process
     });
 
     const page = await browser.newPage();
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36');
     page.setDefaultTimeout(60000);
 
     // ✅ Use yandex.com (not /images/search)
