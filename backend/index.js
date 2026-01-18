@@ -187,9 +187,19 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
     browser = await puppeteer.launch({
       headless: true,
       args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-infobars',
+        '--disable-dev-shm-usage',
+        '--disable-extensions',
+        '--disable-gpu',
+        '--no-zygote',
+        '--single-process',
+        '--disable-features=TranslateUI,BlinkGenPropertyTrees',
+        '--disable-push-messaging',
+        '--disable-background-networking',
+        '--disable-gcm',
+        '--disable-notifications',
       ],
       dumpio: true, // Pipe browser process stdout/stderr to process
     });
