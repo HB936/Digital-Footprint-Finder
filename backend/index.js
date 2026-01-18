@@ -320,6 +320,9 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
 
     // Use translate package (CommonJS compatible)
     if (results.title) {
+      if (results.title.toLowerCase().includes('yandex uses cookies')) {
+        results.title = 'Image Search Results';
+      }
       const titleRes = await translate(results.title, { to: "en", client: "gtx" });
       results.title = titleRes.text;
       

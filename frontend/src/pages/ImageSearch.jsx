@@ -215,7 +215,7 @@ function ImageSearch() {
                 Source Links
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {results.sites.filter(site => site !== 'https://yandex.com/').slice(-2).map((link, i) => (
+                {results.sites.filter(site => site !== 'https://yandex.com/').slice(0, 10).map((link, i) => (
                   <a
                     key={i}
                     href={link}
