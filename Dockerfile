@@ -20,16 +20,17 @@ RUN pip3 install --no-cache-dir --break-system-packages sherlock-project
 ENV PATH="/root/go/bin:${PATH}"
 
 # Clone and build phoneinfoga from GitHub
-RUN git clone https://github.com/sundowndev/phoneinfoga.git /app/phoneinfoga-src && \
-    cd /app/phoneinfoga-src/web/client && \
-    npm install && \
-    npm run build && \
-    cd /app/phoneinfoga-src && \
-    go mod download && \
+RUN git clone https://github.com/sundowndev/phoneinfoga.git /app/phoneinfoga-src
+WORKDIR /app/phoneinfoga-src/web/client
+RUN npm install
+RUN npm run build
+WORKDIR /app/phoneinfoga-src
+RUN go mod download && \
     go install github.com/swaggo/swag/cmd/swag@latest && \
     make build && \
     mkdir -p /app/phoneinfoga/bin && \
     cp ./bin/phoneinfoga /app/phoneinfoga/bin/phoneinfoga
+WORKDIR /app
 
 # Node dependencies
 RUN npm install --prefix api
