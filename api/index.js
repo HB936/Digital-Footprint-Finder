@@ -70,7 +70,7 @@ app.post("/api/username", async (req, res) => {
       return res.status(400).json({ error: "Username is required" });
     }
 
-    const sherlockPath = '/app/sherlock/sherlock_project/sherlock.py';
+    const sherlockPath = '/app/sherlock-repo/sherlock/sherlock.py';
     const pythonExecutable = 'python3';
     const sherlock = spawn(pythonExecutable, [
       sherlockPath,
@@ -78,7 +78,7 @@ app.post("/api/username", async (req, res) => {
       '--print-found',
       username
     ], {
-      cwd: '/app/sherlock',
+      cwd: '/app/sherlock-repo',
       stdio: ['pipe', 'pipe', 'pipe']
     });
 

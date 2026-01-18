@@ -9,8 +9,13 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy project files
+# Copy project files (except submodules)
 COPY . .
+
+# Clone and install Sherlock from GitHub
+RUN git clone https://github.com/sherlock-project/sherlock.git /app/sherlock-repo && \
+    cd /app/sherlock-repo && \
+    pip3 install --no-cache-dir -r requirements.txt
 
 # Node dependencies
 RUN npm install --prefix api
