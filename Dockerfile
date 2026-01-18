@@ -12,10 +12,11 @@ WORKDIR /app
 # Copy project files (except submodules)
 COPY . .
 
-# Clone and install Sherlock from GitHub
-RUN git clone https://github.com/sherlock-project/sherlock.git /app/sherlock-repo && \
-    cd /app/sherlock-repo && \
-    pip3 install --no-cache-dir --break-system-packages -r requirements.txt
+# Install Sherlock from PyPI
+RUN pip3 install --no-cache-dir --break-system-packages sherlock-project
+
+# Clone Sherlock repo to get access to the script
+RUN git clone https://github.com/sherlock-project/sherlock.git /app/sherlock-repo
 
 # Node dependencies
 RUN npm install --prefix api
