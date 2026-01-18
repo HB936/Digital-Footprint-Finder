@@ -39,16 +39,16 @@ function ImageSearch() {
               body: formData,
             });
     
-            let data;
-            try {
-              data = await response.json();
-            } catch (jsonError) {
-              console.error("JSON parsing error:", jsonError);
-              const textResponse = await response.text();
-              console.error("Raw response text:", textResponse);
-              throw new Error("Could not parse server response. Details in console.");
-            }
-    
+                    let data;
+                    try {
+                      data = await response.json();
+                      console.log("Received data from backend:", data);
+                    } catch (jsonError) {
+                      console.error("JSON parsing error:", jsonError);
+                      const textResponse = await response.text();
+                      console.error("Raw response text:", textResponse);
+                      throw new Error("Could not parse server response. Details in console.");
+                    }    
             if (!response.ok) {
               throw new Error(data.error || 'Search failed');
             }
