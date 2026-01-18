@@ -180,13 +180,13 @@ function ImageSearch() {
           </div>
 
           {/* --- Similar Images --- */}
-          {Array.isArray(results.similarImages) && results.similarImages.length > 0 && (
+          {Array.isArray(results.images) && results.images.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold text-slate-800 dark:text-emerald-400 mb-3">
-                Similar Images ({results.similarImages.length})
+                Similar Images ({results.images.length})
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {results.similarImages.map((img, i) => (
+                {results.images.map((img, i) => (
                   <a
                     key={i}
                     href={img}

@@ -308,7 +308,7 @@ app.post("/api/image", upload.single("image"), async (req, res) => {
       title: searchTabData.title,
       description: searchTabData.description,
       sites: searchTabData.sites,
-      similarImages: similarImagesData
+      images: similarImagesData
     };
 
     // Use translate package (CommonJS compatible)
