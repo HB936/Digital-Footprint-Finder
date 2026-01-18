@@ -20,10 +20,8 @@ RUN pip3 install --no-cache-dir --break-system-packages sherlock-project
 # Clone Sherlock repo to get access to the script
 RUN git clone https://github.com/sherlock-project/sherlock.git /app/sherlock-repo
 
-# Build phoneinfoga
-WORKDIR /app/phoneinfoga
-RUN go mod download && make build || go build -o /app/phoneinfoga/bin/phoneinfoga .
-WORKDIR /app
+# Build phoneinfoga from phoneinfoga subdirectory
+RUN cd /app/phoneinfoga && go mod download 2>/dev/null || true && make build || go build -o ./bin/phoneinfoga .
 
 # Node dependencies
 RUN npm install --prefix api
