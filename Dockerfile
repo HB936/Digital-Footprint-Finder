@@ -22,12 +22,32 @@ RUN go mod download && \
     make build
 
 # Stage 2: Final image
-FROM node:22
-
-# Install Python
+FROM node:22-slim# Install Python and Puppeteer dependencies
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
+    libnspr4 \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm-dev \
+    libgconf-2-4 \
+    libgbm-dev \
+    libgtk-3-0 \
+    libxkbcommon-x11-0 \
+    libxcb-dri3-0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxi6 \
+    libxrandr2 \
+    libxtst6 \
+    lsb-release \
+    xdg-utils \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
