@@ -129,7 +129,7 @@ app.post("/api/phone", async (req, res) => {
     const { phone } = req.body;
     if (!phone) return res.status(400).json({ error: "Phone number is required" });
 
-    const phoneinfogaPath = path.resolve(__dirname, "..", "phoneinfoga", "phoneinfoga_linux");
+    const phoneinfogaPath = path.resolve(__dirname, "..", "phoneinfoga", "bin", "phoneinfoga");
     const command = `"${phoneinfogaPath}" scan -n ${phone}`;
 
     exec(command, (error, stdout, stderr) => {
