@@ -28,7 +28,6 @@ FROM node:22-slim
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
-    chromium \
     libnspr4 \
     libnss3 \
     libxss1 \
@@ -72,7 +71,7 @@ RUN npm install --prefix api
 RUN npm install --prefix frontend
 
 # Build user's frontend
-RUN if [ -d "frontend/dist" ]; then npm run build --prefix frontend; else echo "Frontend not found, skipping build."; fi
+RUN npm run build --prefix frontend
 
 # Expose port
 EXPOSE 8080
