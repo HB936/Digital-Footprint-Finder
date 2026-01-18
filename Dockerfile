@@ -15,7 +15,7 @@ COPY . .
 # Clone and install Sherlock from GitHub
 RUN git clone https://github.com/sherlock-project/sherlock.git /app/sherlock-repo && \
     cd /app/sherlock-repo && \
-    pip3 install --no-cache-dir -r requirements.txt
+    pip3 install --no-cache-dir --break-system-packages -r requirements.txt
 
 # Node dependencies
 RUN npm install --prefix api
